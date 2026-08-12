@@ -41,6 +41,14 @@ jobs:
         run: python scripts/aggregate.py
 
       - name: Build site
+        # mkdocs-material prints an unconditional advisory about a future
+        # MkDocs 2.0 on every build. It is advocacy about an unreleased version,
+        # not a diagnostic, and it is not actionable here because
+        # `requirements.txt` pins `mkdocs==1.6.1` — a surprise 2.0 cannot reach
+        # this build. Silenced so that real warnings stay visible under
+        # `--strict`. Reasoning: docs/decisions/0004-properdocs-rejected.md.
+        env:
+          NO_MKDOCS_2_WARNING: "true"
         run: mkdocs build --strict
 
       - uses: actions/upload-pages-artifact@v3

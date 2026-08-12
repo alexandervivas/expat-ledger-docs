@@ -80,6 +80,7 @@ nav:
       - 0001 Aggregation Mechanism: decisions/0001-aggregation-mechanism.md
       - 0002 OpenSpec Specs Are Not Published: decisions/0002-openspec-specs-not-published.md
       - 0003 No OpenSpec In This Repository: decisions/0003-no-openspec-in-this-repository.md
+      - 0004 ProperDocs Rejected: decisions/0004-properdocs-rejected.md
   # Expanded by mkdocs-literate-nav from the generated reference/SUMMARY.md.
   - Reference: reference/
 

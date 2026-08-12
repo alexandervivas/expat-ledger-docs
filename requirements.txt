@@ -1,6 +1,12 @@
 mkdocs==1.6.1
 mkdocs-material==9.7.7
-mkdocs-literate-nav==0.6.3
+
+# mkdocs-literate-nav is held at 0.6.2 deliberately. 0.6.3 added a
+# `properdocs>=1.6.5` dependency and capped real MkDocs at `<=1.6.1`, pulling a
+# fork of MkDocs into every install and blocking MkDocs upgrades. 0.6.2 depends
+# only on `mkdocs>=1.4.1` and renders this site identically. Do not bump without
+# reading docs/decisions/0004-properdocs-rejected.md.
+mkdocs-literate-nav==0.6.2
 
 # pymdown-extensions must be >=11: 10.x passes filename=None into Pygments,
 # and Pygments >=2.20 html.escape()s it, so any indented code block crashes
