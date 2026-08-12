@@ -49,7 +49,10 @@ jobs:
 
   deploy:
     # Pull requests get the strict build as a gate, but never publish.
-    if: github.event_name != 'pull_request'
+    # The `main` guard mirrors the github-pages environment's branch policy,
+    # which permits deployments from `main` only: without it a dispatch from a
+    # feature branch fails the run instead of cleanly skipping to build-only.
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     permissions:
