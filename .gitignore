@@ -1,0 +1,10 @@
+# Python
+.venv/
+__pycache__/
+
+# MkDocs build output
+site/
+
+# Aggregated from the application repositories at build time.
+# Never commit: contracts and ADRs stay authoritative in their source repos.
+docs/reference/

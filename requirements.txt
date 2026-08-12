@@ -1,0 +1,10 @@
+mkdocs==1.6.1
+mkdocs-material==9.7.7
+mkdocs-literate-nav==0.6.3
+
+# pymdown-extensions must be >=11: 10.x passes filename=None into Pygments,
+# and Pygments >=2.20 html.escape()s it, so any indented code block crashes
+# the build. mkdocs-material <9.7 caps pymdown-extensions at ~=10.2, so these
+# two upper bounds have to move together.
+pymdown-extensions==11.0.1
+pygments==2.20.0
