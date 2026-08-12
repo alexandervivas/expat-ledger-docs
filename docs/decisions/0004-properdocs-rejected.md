@@ -84,6 +84,14 @@ is unactionable for a repository that pins its toolchain. Silencing it keeps
 real `--strict` warnings legible. This note is the record that it is suppressed
 on purpose.
 
+Two similarly named variables are easy to confuse, so for the record: the
+ProperDocs advisory offered `DISABLE_MKDOCS_2_WARNING`, and issue #4 quotes that
+name. It belonged to `mkdocs-literate-nav` 0.6.3 and is now dead — no package in
+this dependency set reads it, because the plugin that did has been pinned away.
+`NO_MKDOCS_2_WARNING` is a different variable belonging to `mkdocs-material`,
+and it is the only one worth setting here. Setting both would imply a dependency
+this decision deliberately removed.
+
 ## Revisit trigger
 
 Reopen this decision when any of the following holds:
