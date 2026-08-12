@@ -13,3 +13,4 @@ live here.
 | [0001](0001-aggregation-mechanism.md) | Code-adjacent trees are vendored at build time by a script, not by a plugin or submodule |
 | [0002](0002-openspec-specs-not-published.md) | OpenSpec capability specs are not published on the site |
 | [0003](0003-no-openspec-in-this-repository.md) | This repository does not adopt OpenSpec for its own workflow |
+| [0004](0004-properdocs-rejected.md) | ProperDocs is rejected; MkDocs stays the build driver and `mkdocs-literate-nav` is held at 0.6.2 |
