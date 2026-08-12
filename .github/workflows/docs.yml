@@ -1,0 +1,63 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  # Sent by the application repositories when their contracts or ADRs change.
+  # The sending half does not exist yet — see issue #1, "Deferred work owned by
+  # the application repositories". Until it lands, `schedule` below is what
+  # keeps the site fresh.
+  repository_dispatch:
+    types: [docs-updated]
+  schedule:
+    # Daily fallback rebuild, so aggregated content cannot go stale silently.
+    - cron: "17 4 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .tool-versions
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # Pulls contracts and ADRs from the application repositories. Both are
+      # public, so no token is needed.
+      - name: Aggregate code-adjacent documentation
+        run: python scripts/aggregate.py
+
+      - name: Build site
+        run: mkdocs build --strict
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    # Pull requests get the strict build as a gate, but never publish.
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
