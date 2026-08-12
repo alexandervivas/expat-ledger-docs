@@ -1,0 +1,145 @@
+site_name: Expat Ledger
+site_description: Product, architecture, and delivery documentation for Expat Ledger.
+site_url: https://alexandervivas.github.io/expat-ledger-docs/
+repo_name: alexandervivas/expat-ledger-docs
+repo_url: https://github.com/alexandervivas/expat-ledger-docs
+edit_uri: edit/main/docs/
+
+# Pages under `Reference` are aggregated from the application repositories by
+# `scripts/aggregate.py` and are not owned here. Everything else is owned by
+# this repository. See docs/decisions/0001-aggregation-mechanism.md.
+nav:
+  - Overview: index.md
+  - Glossary: glossary.md
+  - Architecture:
+      - Context: architecture/c4-context.md
+      - Containers: architecture/c4-container.md
+      - Scala Frameworks: architecture/scala-frameworks.md
+      - Security & Encryption: architecture/security-encryption-guide.md
+      - Frontend:
+          - Tenant Membership: architecture/frontend/backend-authoritative-tenant-membership.md
+          - Balance Persistence: architecture/frontend/connected-account-balance-persistence.md
+          - Design Direction Audit: architecture/frontend/design-direction-audit.md
+  - Requirements:
+      - Index: requirements/index.md
+      - Traceability Matrix: requirements/TRACEABILITY.md
+      - Functional:
+          - FR-001 Tenant Onboarding: requirements/FR-001-tenant-onboarding.md
+          - FR-002 Account Management: requirements/FR-002-account-management.md
+          - FR-003 Transaction Ledger: requirements/FR-003-transaction-ledger.md
+          - FR-004 FX Service: requirements/FR-004-fx-service.md
+          - FR-005 Ingestion Engine: requirements/FR-005-ingestion-engine.md
+          - FR-006 Remittance Linkage: requirements/FR-006-remittance-linkage.md
+          - FR-007 RBAC & Identity Propagation: requirements/FR-007-rbac-security.md
+          - FR-008 Data Encryption: requirements/FR-008-data-encryption.md
+          - FR-009 Idempotency: requirements/FR-009-idempotency.md
+          - FR-010 Bank Attribution: requirements/FR-010-bank-attribution.md
+          - FR-011 Multi-Currency Balances: requirements/FR-011-multi-currency-balances.md
+          - FR-012 Secure Authentication: requirements/FR-012-secure-authentication.md
+          - FR-013 Real-Time Streaming: requirements/FR-013-real-time-streaming.md
+          - FR-014 Filtering Engine: requirements/FR-014-filtering-engine.md
+          - FR-015 Automated Export: requirements/FR-015-automated-export.md
+          - FR-016 Dark Mode & Theming: requirements/FR-016-dark-mode-theming.md
+          - FR-017 Alert Rules Engine: requirements/FR-017-alert-rules-engine.md
+          - FR-018 Data Portability: requirements/FR-018-data-portability.md
+      - Non-Functional:
+          - NFR-001 Performance & Latency: requirements/NFR-001-performance.md
+          - NFR-002 Observability: requirements/NFR-002-observability.md
+          - NFR-003 Reliability: requirements/NFR-003-reliability.md
+          - NFR-004 Portability: requirements/NFR-004-portability.md
+      - Differentiators:
+          - USP-001 Tax-Residency Ready Exports: requirements/USP-001-tax-residency-ready-exports.md
+          - USP-002 Automatic Deductible Identification: requirements/USP-002-automatic-deductible-identification.md
+          - USP-003 Hidden Fee Benchmarking: requirements/USP-003-hidden-fee-benchmarking.md
+          - USP-004 Remittance Routing AI: requirements/USP-004-remittance-routing-ai.md
+          - USP-005 Shared Household Ledgers: requirements/USP-005-multi-tenant-shared-household.md
+          - USP-006 Nomad Pocket Segregation: requirements/USP-006-nomad-freelancer-pockets.md
+          - USP-007 Zero-Knowledge Ledger: requirements/USP-007-zero-knowledge-ledger.md
+          - USP-008 Proof of Funds Generator: requirements/USP-008-proof-of-funds-generator.md
+          - USP-009 Personal Finance API: requirements/USP-009-personal-finance-api.md
+          - USP-010 AI Financial Advisor: requirements/USP-010-ai-financial-advisor.md
+      - AI Capabilities:
+          - AI-001 Anomaly Detection: requirements/AI-001-anomaly-detection.md
+          - AI-002 Spending Forecast: requirements/AI-002-spending-forecast.md
+          - AI-003 FX-Aware Savings Insight: requirements/AI-003-fx-aware-savings-insight.md
+          - AI-004 Premium Advisor Boundaries: requirements/AI-004-premium-advisor-security.md
+  - Governance:
+      - Scope CHANGELOG: governance/scope-CHANGELOG.md
+      - Product CHANGELOG: governance/product-CHANGELOG.md
+      - Security: governance/SECURITY.md
+      - SLOs & SLIs: governance/SLOs-SLIs.md
+  - Operations:
+      - CI Quality Gates: ops/ci-quality-gates.md
+      - Deployment (Render, not in force): ops/deployment-render.md
+      - Vault Recovery: ops/vault-recovery.md
+      - OpenCode OpenSpec Workflow (Scala): ops/opencode-openspec-agentic-workflow.md
+  - UX:
+      - Stitch Prompt: ux/stitch-prompt.md
+  - Site Decisions:
+      - Index: decisions/index.md
+      - 0001 Aggregation Mechanism: decisions/0001-aggregation-mechanism.md
+      - 0002 OpenSpec Specs Are Not Published: decisions/0002-openspec-specs-not-published.md
+      - 0003 No OpenSpec In This Repository: decisions/0003-no-openspec-in-this-repository.md
+  # Expanded by mkdocs-literate-nav from the generated reference/SUMMARY.md.
+  - Reference: reference/
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.tracking
+    - navigation.top
+    - navigation.indexes
+    - toc.follow
+    - content.code.copy
+    - content.code.annotate
+    - search.suggest
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+
+plugins:
+  - search
+  - literate-nav
+
+# Every one of these is an error under `--strict`, which is how a broken nav
+# entry, a missing file, or an orphaned page fails the build.
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+  links:
+    not_found: warn
+    anchors: warn
+    unrecognized_links: warn
+    absolute_links: relative_to_docs
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.tabbed
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra:
+  generator: false
+
+extra_javascript:
+  - javascripts/mermaid.mjs
