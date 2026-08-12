@@ -4,7 +4,10 @@ import elkLayouts from 'https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0/di
 mermaid.registerLayoutLoaders(elkLayouts);
 mermaid.initialize({
     startOnLoad: false,
-    securityLevel: "loose",
+    // This site is public and renders diagrams aggregated from other
+    // repositories, so sanitization stays on. No diagram here uses HTML
+    // labels or click handlers, which is all `loose` would buy.
+    securityLevel: "strict",
     layout: "elk",
 });
 

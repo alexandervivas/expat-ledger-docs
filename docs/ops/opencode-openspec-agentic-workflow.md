@@ -1,6 +1,11 @@
 # OpenCode OpenSpec Agentic Workflow (Scala)
 
-This repository uses an OpenCode-native OpenSpec workflow with phase
+> **Scope: `expat-ledger-backend`.** This page documents the application
+> repository's workflow, not this documentation repository's. The docs
+> repository does not use OpenSpec — see
+> [decision 0003](../decisions/0003-no-openspec-in-this-repository.md).
+
+`expat-ledger-backend` uses an OpenCode-native OpenSpec workflow with phase
 orchestrators and Scala-specialized workers.
 
 Requirement traceability for this ops setup:

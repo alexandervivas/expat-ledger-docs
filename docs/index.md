@@ -20,10 +20,19 @@ Welcome! This site documents the architecture, contracts, and governance for the
 ## How to run docs locally
 
 ```bash
-pip install mkdocs mkdocs-material
-mkdocs serve
-# open http://127.0.0.1:8000
+python -m venv .venv
+.venv/bin/pip install -r requirements.txt
+
+# Pull contracts and ADRs from the application repositories. Required:
+# the nav references pages this step generates, so --strict fails without it.
+.venv/bin/python scripts/aggregate.py
+
+.venv/bin/mkdocs serve   # open http://127.0.0.1:8000
 ```
+
+`mkdocs build --strict` is the gate CI enforces. See the
+[repository README](https://github.com/alexandervivas/expat-ledger-docs#building-locally)
+for the full workflow.
 
 ## Contributing
 
