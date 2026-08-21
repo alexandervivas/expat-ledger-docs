@@ -60,7 +60,10 @@ Reviewability is a delivery gate: keep every pull request within roughly 200–3
 ## 1. Inspect And Qualify
 
 1. Require an issue URL or issue number. Infer the current repository only for a number.
-2. **Name the session.** As soon as the issue number is known, rename this session to `docs#<issue>` so the planning session can address it unambiguously — a session's display name is exactly the address its cross-session tooling resolves, and an unnamed session shows a directory-derived or first-prompt default that makes routing guesswork. Invoke `/rename docs#<issue>` when slash commands are available to you; otherwise ask the operator to type it and note the launch form `claude --name docs#<issue>` for next time. Never block qualification on the rename.
+2. **Name the session.** As soon as the issue number is known, rename this session to `docs#<issue>`. A session's display name is exactly the address the planning session's cross-session tooling resolves; an unnamed session shows a directory-derived or first-prompt default, which makes routing guesswork.
+   - Invoke `/rename docs#<issue>` when slash commands are available to you.
+   - Otherwise ask the operator to type it, and note the launch form `claude --name docs#<issue>` for next time.
+   - Never block qualification on the rename.
 3. Read `AGENTS.md` and the issue body before changing files.
 4. Run:
 
