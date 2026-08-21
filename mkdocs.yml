@@ -68,6 +68,7 @@ nav:
       - Product CHANGELOG: governance/product-CHANGELOG.md
       - Security: governance/SECURITY.md
       - SLOs & SLIs: governance/SLOs-SLIs.md
+      - Evidence Archive Convention: governance/evidence-archive.md
   - Operations:
       - CI Quality Gates: ops/ci-quality-gates.md
       - Deployment (Render, not in force): ops/deployment-render.md
@@ -75,6 +76,11 @@ nav:
       - OpenCode OpenSpec Workflow (Scala): ops/opencode-openspec-agentic-workflow.md
   - UX:
       - Stitch Prompt: ux/stitch-prompt.md
+  # Walked-run screenshots. Public and stable so they render in issues in the
+  # private application repositories. See governance/evidence-archive.md.
+  - Evidence:
+      - Register: evidence/index.md
+      - 2026-08-20 Start Your Ledger (founder test): evidence/2026-08-20-start-your-ledger-founder-test/index.md
   - Site Decisions:
       - Index: decisions/index.md
       - 0001 Aggregation Mechanism: decisions/0001-aggregation-mechanism.md

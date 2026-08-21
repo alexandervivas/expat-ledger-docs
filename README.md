@@ -89,3 +89,11 @@ Never commit or publish credentials, tokens, tenant identifiers, account
 identifiers, real financial data, raw bank statements, or internal-only
 operational detail. Review every page for sensitivity before it lands,
 including pages moved in from the application repositories.
+
+That the site is public is also what makes it useful as an **evidence
+archive**: the application repositories are private, so their screenshots
+cannot render in an issue, while anything under `docs/evidence/` gets a stable
+public URL that renders in all three. Adding a run means following
+[the archive convention](docs/governance/evidence-archive.md) — dated folders,
+synthetic identities, destructive redaction, and runs that are never edited
+after the fact.

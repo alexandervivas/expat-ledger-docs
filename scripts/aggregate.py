@@ -82,11 +82,15 @@ SOURCES = [
                 "frontend/decisions",
                 "Architecture Decisions",
                 link_rewrites=(
-                    # This narrative migrated into this repository; the ADR's
-                    # sibling-relative link no longer resolves upstream.
+                    # These narratives migrated into this repository; the ADRs'
+                    # sibling-relative links no longer resolve upstream.
                     (
                         "](../design-direction-audit.md)",
                         "](/architecture/frontend/design-direction-audit.md)",
+                    ),
+                    (
+                        "](../backend-authoritative-tenant-membership.md)",
+                        "](/architecture/frontend/backend-authoritative-tenant-membership.md)",
                     ),
                 ),
             ),

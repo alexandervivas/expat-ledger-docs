@@ -19,6 +19,7 @@ Repository-wide instructions for coding agents working on the Expat Ledger centr
 
 - The published site is public. Never commit or publish credentials, tokens, tenant identifiers, account identifiers, real financial data, raw bank statements, or internal-only operational detail.
 - Review every page that enters this repository for sensitivity before it lands, including pages moved from the application repositories.
+- Screenshots from walked runs live under `docs/evidence/` and are published precisely so they render in issues in the private application repositories. They carry extra rules — synthetic identities only, destructive redaction, immutable runs — stated in `docs/governance/evidence-archive.md`. Read it before adding an image, and review every image against it before it lands.
 
 ## 4. Quality Gates
 
