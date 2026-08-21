@@ -19,14 +19,14 @@ Delegation is optional in this repository — most documentation batches are sma
 
 ## Isolate And Reclaim Parallel Workspaces
 
-Working two issues in this repository at once requires separate git worktrees. Create a worktree only when another issue is already in flight in the primary checkout.
+Every issue is worked in its own git worktree by default; the primary checkout stays on `main` and is never used for issue work. This keeps `main` available for inspection and parallel sessions, and makes workspace reclamation an explicit end-of-issue step.
 
 ```bash
 git fetch origin
 git worktree add ../expat-ledger-docs-i<number> -b issue/<number>-<slug> origin/main
 ```
 
-Always name the start point explicitly. Keep the worktree a sibling of the primary checkout, never nested inside it. Record the worktree path in the same issue comment that names the branch.
+Always name the start point explicitly — `git worktree add -b` branches from the current `HEAD`, so omitting `origin/main` forks off whatever happens to be checked out. Keep the worktree a sibling of the primary checkout, never nested inside it. Record the worktree path in the same issue comment that names the branch.
 
 Reclaim the worktree before reporting completion. Both commands must return empty, without exception:
 
@@ -54,7 +54,9 @@ Reviewability is a delivery gate: keep every pull request within roughly 200–3
 - Initialize the stack in the issue workspace with `gh stack init` from `origin/main`, keeping the first increment on the standard `issue/<number>-<slug>` branch. After committing each increment, start the next with `gh stack add issue/<number>-<slug>-<n>-<step>`.
 - Publish with `gh stack submit`, which creates or updates the entire chain of PRs. Every PR links the issue, states its stack position (for example `Stack 2/3`), and summarizes only its own increment.
 - An issue whose whole diff fits the budget is a stack of one: same commands, one PR.
-- Merge bottom-up, each PR on the owner's word as always. After every merge, run `gh stack sync` to restack what remains. Keep the project item `In Progress` until the top of the stack merges; the issue closes with the top PR.
+- Merge bottom-up, each PR on the owner's word as always. Keep the project item `In Progress` until the top of the stack merges; the issue closes with the top PR.
+- Stacked PRs reject `gh pr merge` and the plain `pulls/<n>/merge` REST endpoint ("must be merged using the asynchronous merge REST API"). Merge with `gh api -X PUT repos/<owner>/<repo>/pulls/<n>/merge-async -f merge_method=squash`, which enqueues the merge and returns `status: pending` with a `details.uuid`; poll `gh pr view <n> --json state` until `MERGED`. This is the complete endpoint contract — no documentation fetch is needed.
+- After every merge, run `gh stack sync` to restack what remains. Before merging the next PR, poll its `mergeStateStatus` until `CLEAN` — GitHub recomputes mergeability after the base moves, and `merge-async` on a not-yet-clean PR fails.
 - Never bundle unrelated scope to fill a PR's budget.
 
 ## 1. Inspect And Qualify
@@ -85,7 +87,7 @@ Reviewability is a delivery gate: keep every pull request within roughly 200–3
 
 1. Derive a short kebab-case slug from the issue title.
 2. Use `issue/<number>-<slug>` for a new branch.
-3. Create the branch only when a dedicated branch does not already exist.
+3. Create the issue worktree and its branch together per Isolate And Reclaim Parallel Workspaces; reuse them when they already exist. Do not develop the issue in the primary checkout.
 4. Set the project item to `In Progress` only after preflight succeeds:
 
    ```bash
@@ -124,6 +126,8 @@ Reviewability is a delivery gate: keep every pull request within roughly 200–3
 - **Evidence-only issues** (deliverable posted on the issue itself, no branch or PR): close on completion-report acceptance — set `Done` and close as completed.
 
 Never set `Done` merely because content exists locally or a PR is open. Never close an issue with unmet acceptance criteria.
+
+**Board every issue you file.** Filing any issue from this repository — discovered bugs, deferred follow-ups, spikes — includes adding it to the shared Project in the same step: `gh project item-add 1 --owner alexandervivas --url <issue-url>`. An issue that is not on the Project is invisible to product status, planning, and dependency analysis; leave Release and Priority for the product triage unless they were decided when the issue was filed.
 
 ## 6. Respect Git Write Boundaries
 
