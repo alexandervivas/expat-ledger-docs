@@ -150,3 +150,22 @@ Report:
 - Quality gates run with results (`mkdocs build --strict` output once configured)
 - Sensitive-content review outcome for every page that entered the repository
 - Remaining blockers, the PR URLs in stack order with each PR's diff size, and whether merge or issue closure still awaits the owner's word
+
+## Degrade Gracefully When The GraphQL API Is Unavailable
+
+The GitHub GraphQL budget (5,000 points/hour) is shared across every session on this account and exhausts under parallel delivery — three separate outages occurred on 2026-08-21 alone. When any GraphQL call fails with a rate-limit or availability error:
+
+1. **Never retry into an exhausted quota.** Confirm with `gh api rate_limit` (REST, always available; read `.resources.graphql.remaining`), state the outage in the issue thread or completion report, and switch modes.
+2. **Prefer REST and plain git equivalents.** Repository state (branches, diffs, worktrees, merges) never needs the API at all. For GitHub objects use the `gh api` REST forms: `repos/{owner}/{repo}/issues[/N]`, `.../issues/N/comments -F body=@file`, `.../pulls`, and `.../commits/{sha}/check-runs` for CI polling. Know the trap: `gh issue view/comment/edit`, `gh pr checks`, and every `gh project` command use GraphQL under the hood — their `gh api` REST equivalents are the reliable fallback.
+3. **Do not attempt Project (board) reads or writes during an outage** — they have no REST equivalent. Record the intended field values in the issue or completion report and flag them to the planning session, which owns board writes and batches them after the quota resets.
+4. **Qualification does not hard-block on GraphQL.** When the board inspect cannot run, qualify from the issue body fetched over REST and state the substitution — the gate is the issue's content, not the API that fetched it.
+5. **An unverifiable write is reported as unverified, never as done.**
+
+## Notify The Planning Session On Delivery — Mandatory
+
+Delivery is not finished until the planning (dispatcher) session has been notified. As soon as the issue is completely delivered — and always **before** treating it as closeable — send a delivery notification:
+
+1. **Find the planning session** with `ListAgents` and message it with `SendMessage`. It is the session operating the product board (typically launched from the workspace root, not from a repository). If no planning session is reachable, post the identical report as a comment on the issue and tell your operator the notification is undelivered.
+2. **The notification must state:** what merged (PR numbers and SHAs); completeness — every acceptance criterion marked met, partial, or deviated-from, each with its evidence; every alert raised during delivery (security findings, contract or requirements drift, follow-up issues filed, deviations from this skill's text); and any board writes that could not be performed or verified.
+3. **In case of any doubt, ask before closing.** An ambiguous acceptance criterion, a deviation taken en route, verification that is only possible post-deploy, a permission boundary, or any mismatch between what the issue promised and what shipped: put the question to the planning session and wait for instructions. Close only when the path to closure is unambiguous, evidenced, and authorized — closing as safely as possible beats closing quickly.
+4. The owner's authorization rules for merging and closing are unchanged; this notification is in addition to them, never a substitute.
