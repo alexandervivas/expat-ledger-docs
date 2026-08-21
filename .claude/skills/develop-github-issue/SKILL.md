@@ -60,22 +60,26 @@ Reviewability is a delivery gate: keep every pull request within roughly 200–3
 ## 1. Inspect And Qualify
 
 1. Require an issue URL or issue number. Infer the current repository only for a number.
-2. Read `AGENTS.md` and the issue body before changing files.
-3. Run:
+2. **Name the session.** As soon as the issue number is known, rename this session to `docs#<issue>`. A session's display name is exactly the address the planning session's cross-session tooling resolves; an unnamed session shows a directory-derived or first-prompt default, which makes routing guesswork.
+   - Invoke `/rename docs#<issue>` when slash commands are available to you.
+   - Otherwise ask the operator to type it, and note the launch form `claude --name docs#<issue>` for next time.
+   - Never block qualification on the rename.
+3. Read `AGENTS.md` and the issue body before changing files.
+4. Run:
 
    ```bash
    .claude/skills/develop-github-issue/scripts/project_issue.sh inspect <issue>
    git status --short --branch
    ```
 
-4. Require all of the following before starting:
+5. Require all of the following before starting:
    - The issue is open and belongs to this repository (or is a cross-repository documentation issue explicitly assigning work here).
    - The issue is present in the shared project.
    - `Refinement` is `Ready`.
    - Acceptance criteria and scope are actionable.
    - Required dependencies are satisfied or explicitly included in the change.
-5. Stop without changing project status when the issue needs a product decision, belongs to another repository, or has an unresolved dependency.
-6. Preserve unrelated working-tree changes. Reuse a matching branch rather than creating duplicates.
+6. Stop without changing project status when the issue needs a product decision, belongs to another repository, or has an unresolved dependency.
+7. Preserve unrelated working-tree changes. Reuse a matching branch rather than creating duplicates.
 
 ## 2. Start The Delivery Record
 
