@@ -9,7 +9,7 @@
 
 ## Description
 
-Defines the security and privacy boundaries for the 24/7 AI Financial Advisor (USP-010). It ensures that ledger data can be used to ground the LLM without compromising the system's "Zero-Knowledge" pillar (ADR-018).
+Defines the security and privacy boundaries for the 24/7 AI Financial Advisor (USP-010). It ensures that ledger data can be used to ground the LLM without compromising the system's "Zero-Knowledge" pillar (ADR-017).
 
 ## Functional Requirements
 

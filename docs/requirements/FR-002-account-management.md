@@ -39,4 +39,4 @@ As an Expat, I want to register my various bank accounts (e.g., a USD checking a
 
 ## Constraints
 
-- **Security**: Account numbers and sensitive PII must be encrypted at the application level (ADR-018).
+- **Security**: Account numbers and sensitive PII must be encrypted at the application level (ADR-017).

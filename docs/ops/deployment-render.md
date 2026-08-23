@@ -1,8 +1,8 @@
 # Deployment — Render (Free Tier) — NOT IN FORCE
 
-> **This runbook does not describe a real environment and must not be followed.** [ADR-007](/reference/backend/decisions/ADR-007-render-hosting.md) is marked not in force: it was never executed — the `render.yaml` that step 1 below asks you to commit was never committed, and no Render environment was ever created — and [ADR-027](/reference/backend/decisions/ADR-027-secret-management-proportionality.md) selects AWS for key and secret management because Render provides no managed KMS.
+> **This runbook does not describe a real environment and must not be followed.** The Render decision — now devops [ADR-016](https://github.com/alexandervivas/expat-ledger-devops/blob/main/docs/decisions/ADR-016-render-hosting.md) — is marked not in force: it was never executed — the `render.yaml` that step 1 below asks you to commit was never committed, and no Render environment was ever created — and [ADR-026](/reference/backend/decisions/ADR-026-secret-management-proportionality.md) selects AWS for key and secret management because Render provides no managed KMS.
 >
-> **A full hosting decision is owed and not yet made**, so no deployment runbook is currently authoritative. This file is retained as the historical record of the September 2025 intent. The steps below never worked, because they were never carried out.
+> **The hosting decision has since been made elsewhere:** devops [ADR-017](https://github.com/alexandervivas/expat-ledger-devops/blob/main/docs/decisions/ADR-017-hosting-platform.md) selects GCP-native hosting in `europe-west4`, so this runbook is not authoritative for any environment. It is retained as the historical record of the September 2025 intent. The steps below never worked, because they were never carried out.
 
 Originally: an environment for demos only, expecting cold starts and DB expiry (~30 days) on the free plan.
 

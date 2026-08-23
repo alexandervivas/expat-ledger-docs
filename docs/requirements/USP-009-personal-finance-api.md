@@ -13,7 +13,7 @@ Give tech-savvy expats (developers/quants) an API key to read their own ledger d
 ## Functional Alignment
 
 - **FR-007**: Leverages the existing RBAC and identity propagation logic.
-- **ADR-018**: Ensures API access respects application-level encryption.
+- **ADR-017**: Ensures API access respects application-level encryption.
 
 ## Key Features
 

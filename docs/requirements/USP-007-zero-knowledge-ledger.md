@@ -14,8 +14,8 @@ The system uses application-level encryption (ALE) so that sensitive data (e.g.,
 
 ## Functional Alignment
 
-- **[ADR-027](/reference/backend/decisions/ADR-027-secret-management-proportionality.md)**: The current decision. Google Tink AEAD (AES-256-GCM) for PII fields and DAEAD (AES-256-SIV) for `account_number`, with `tenant_id` bound as associated data, and the keyset wrapped by an AWS KMS customer managed key. Declared assurance target is OWASP ASVS 5.0.0 Level 2 with named additions and deferrals.
-- **[ADR-018](/reference/backend/decisions/ADR-018-application-level-encryption.md)**: Originated the ALE architecture; its Tink AEAD/DAEAD mechanism is reinstated by ADR-027, while its key-management sections are superseded.
+- **[ADR-026](/reference/backend/decisions/ADR-026-secret-management-proportionality.md)**: The current decision. Google Tink AEAD (AES-256-GCM) for PII fields and DAEAD (AES-256-SIV) for `account_number`, with `tenant_id` bound as associated data, and the keyset wrapped by an AWS KMS customer managed key. Declared assurance target is OWASP ASVS 5.0.0 Level 2 with named additions and deferrals.
+- **[ADR-017](/reference/backend/decisions/ADR-017-application-level-encryption.md)**: Originated the ALE architecture; its Tink AEAD/DAEAD mechanism is reinstated by ADR-026, while its key-management sections are superseded.
 - **[FR-008](FR-008-data-encryption.md)**: The requirement this USP is integrated into. Note that FR-008 is forward-looking — the posture is decided but the runtime is not yet migrated.
 
 ## Key Features
