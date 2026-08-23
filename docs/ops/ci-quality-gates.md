@@ -3,7 +3,7 @@
 What `.github/workflows/ci.yml` actually enforces, how to reproduce each gate locally, and how
 the two suppression paths are governed.
 
-Authoritative decisions: [ADR-026](/reference/backend/decisions/ADR-026-ci-security-gates.md).
+Authoritative decisions: [ADR-025](/reference/backend/decisions/ADR-025-ci-security-gates.md).
 Introduced by [#78](https://github.com/alexandervivas/expat-ledger-backend/issues/78).
 
 This document is deliberately precise about the _limits_ of each gate. It replaces a pipeline
@@ -251,4 +251,4 @@ the baseline scan found nothing.
 No FR or NFR mandates CI-level scanning directly. That gap is recorded rather than closed with
 an invented identifier. These gates protect enforcement of **FR-007** (RBAC security),
 **FR-008** (data encryption), and **FR-012** (secure authentication), and support the
-`AGENTS.md` OWASP ASVS 5.0.0 Level 2 posture as amended by ADR-027.
+`AGENTS.md` OWASP ASVS 5.0.0 Level 2 posture as amended by ADR-026.
