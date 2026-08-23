@@ -161,11 +161,10 @@ The GitHub GraphQL budget (5,000 points/hour) is shared across every session on 
 4. **Qualification does not hard-block on GraphQL.** When the board inspect cannot run, qualify from the issue body fetched over REST and state the substitution — the gate is the issue's content, not the API that fetched it.
 5. **An unverifiable write is reported as unverified, never as done.**
 
-## Notify The Planning Session On Delivery — Mandatory
+## Notify The Planning Session After Delivery — Reporting Only
 
-Delivery is not finished until the planning (dispatcher) session has been notified. As soon as the issue is completely delivered — and always **before** treating it as closeable — send a delivery notification:
+The planning (dispatcher) session is **never an approval gate**: it does not authorize merges, closures, or anything else, and delivery never waits on it. Merging and closing follow the owner's word in this session, exactly as the rest of this skill states. What the planning session gets is a report, **after** the work is done and merged:
 
-1. **Find the planning session** with `ListAgents` and message it with `SendMessage`. It is the session operating the product board (typically launched from the workspace root, not from a repository). If no planning session is reachable, post the identical report as a comment on the issue and tell your operator the notification is undelivered.
-2. **The notification must state:** what merged (PR numbers and SHAs); completeness — every acceptance criterion marked met, partial, or deviated-from, each with its evidence; every alert raised during delivery (security findings, contract or requirements drift, follow-up issues filed, deviations from this skill's text); and any board writes that could not be performed or verified.
-3. **In case of any doubt, ask before closing.** An ambiguous acceptance criterion, a deviation taken en route, verification that is only possible post-deploy, a permission boundary, or any mismatch between what the issue promised and what shipped: put the question to the planning session and wait for instructions. Close only when the path to closure is unambiguous, evidenced, and authorized — closing as safely as possible beats closing quickly.
-4. The owner's authorization rules for merging and closing are unchanged; this notification is in addition to them, never a substitute.
+1. **Find the planning session** with `ListAgents` and message it with `SendMessage`. It is the session operating the product board (typically launched from the workspace root, not from a repository). If no planning session is reachable, post the identical report as a comment on the issue.
+2. **The report states:** what merged (PR numbers and SHAs); completeness — every acceptance criterion marked met, partial, or deviated-from, each with its evidence; every alert raised during delivery (security findings, contract or requirements drift, follow-up issues filed, deviations from this skill's text); and **everything left undone or unverified** — deferred scope, board writes that could not be performed or confirmed, caveats the next session should inherit.
+3. **Questions that need a human are the owner's**, put to them in this session as they arise; the planning session is informed of the outcome in the report, never asked for permission.
