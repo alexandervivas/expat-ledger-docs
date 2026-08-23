@@ -1,6 +1,6 @@
 # Data Encryption Guide: Tink Keysets, KMS Master Keys, and Rotation
 
-> **Status: in force as of 2026-08-08.** This guide describes the encryption posture that is wired and running, decided in [ADR-027](/reference/backend/decisions/ADR-027-secret-management-proportionality.md) (Accepted 2026-08-06) and delivered by [issue #88](https://github.com/alexandervivas/expat-ledger-backend/issues/88). It replaces the previous HashiCorp Vault Transit guide in full: **Vault no longer exists anywhere in this repository** — no code, configuration, infrastructure, compose service, or dependency.
+> **Status: in force as of 2026-08-08.** This guide describes the encryption posture that is wired and running, decided in [ADR-026](/reference/backend/decisions/ADR-026-secret-management-proportionality.md) (Accepted 2026-08-06) and delivered by [issue #88](https://github.com/alexandervivas/expat-ledger-backend/issues/88). It replaces the previous HashiCorp Vault Transit guide in full: **Vault no longer exists anywhere in this repository** — no code, configuration, infrastructure, compose service, or dependency.
 
 Application-Level Encryption (ALE) in **The Expat Ledger** protects sensitive fields before they reach PostgreSQL. It uses **Google Tink** primitives in-process, with the Tink keysets themselves encrypted ("wrapped") by **AWS KMS customer managed keys**. There is no encryption-as-a-service round trip per field.
 
@@ -15,7 +15,7 @@ Every rotation, recovery, and failure question in this document reduces to which
 | **KMS master key** (key-encryption) | An AWS KMS customer managed key, addressed by **alias ARN**  | Inside AWS KMS, HSM-backed, never leaves it                                        | Tink, once per process start, to unwrap a keyset |
 | **Tink keyset** (data-encryption)   | A JSON keyset holding the AES keys that encrypt field values | At rest: encrypted, in `infra/keysets/` locally. At runtime: **in process memory** | The services, on every field encrypt/decrypt     |
 
-The keyset at rest contains only `encryptedKeyset` and `keysetInfo` — no cleartext key material — whenever a master key URI is configured. That keysets are decrypted into process memory is the deliberate **ASVS 13.3.3 deferral** recorded in ADR-027 §1, not an oversight: satisfying 13.3.3 would mean a provider round trip per encrypted field per row, against the NFR-001 P95 < 200 ms budget. The revisit condition is a _measurement_ with real users, not a re-argument.
+The keyset at rest contains only `encryptedKeyset` and `keysetInfo` — no cleartext key material — whenever a master key URI is configured. That keysets are decrypted into process memory is the deliberate **ASVS 13.3.3 deferral** recorded in ADR-026 §1, not an oversight: satisfying 13.3.3 would mean a provider round trip per encrypted field per row, against the NFR-001 P95 < 200 ms budget. The revisit condition is a _measurement_ with real users, not a re-argument.
 
 ---
 
@@ -36,7 +36,7 @@ Two keysets, two primitives, one associated-data rule.
 
 ## 3. ⚠ Rotation: the trap you must not walk into
 
-**Rotating the KMS master key is harmless. Rotating the Tink DAEAD primary key is not.** These are different operations with different consequences, and ADR-027 §3 records the distinction as a genuine tension in the design.
+**Rotating the KMS master key is harmless. Rotating the Tink DAEAD primary key is not.** These are different operations with different consequences, and ADR-026 §3 records the distinction as a genuine tension in the design.
 
 ### Rotating the **KMS master key** — safe, and expected
 
@@ -60,7 +60,7 @@ The only correct fix is a **column-wide rewrap**: decrypt every stored value und
 
 This is a deliberate, recorded position, not an omission. It is safe right now for one reason only: there is no persisted production ciphertext and no index or unique constraint on `accounts.account_number`, so there is no row whose equality could fail.
 
-**ADR-027's trigger for building the rewrap path** ([follow-up obligations](/reference/backend/decisions/ADR-027-secret-management-proportionality.md#follow-up-obligations)): **before the first real user data is persisted, or before any index or unique constraint is added to `account_number`, whichever comes first.** At that point a working column-wide rewrap becomes a genuine prerequisite for the adopted ASVS 13.3.4 rotation commitment and the determinism capability to coexist, and the deterministic key's rotation schedule must be defined in terms of it.
+**ADR-026's trigger for building the rewrap path** ([follow-up obligations](/reference/backend/decisions/ADR-026-secret-management-proportionality.md#follow-up-obligations)): **before the first real user data is persisted, or before any index or unique constraint is added to `account_number`, whichever comes first.** At that point a working column-wide rewrap becomes a genuine prerequisite for the adopted ASVS 13.3.4 rotation commitment and the determinism capability to coexist, and the deterministic key's rotation schedule must be defined in terms of it.
 
 ### What the maintenance worker does and does not do
 
@@ -91,7 +91,7 @@ The wired `SecretManager` is `TinkSecretManager` (`modules/shared-kernel/.../inf
 
 ## 5. Keyset material and provisioning
 
-`infra/keysets/` holds **generated, git-ignored material only**. A plaintext Tink keyset is base64 AES-256 key material; committing one would violate the standing prohibition on committing key material and would be permanent in the history ADR-026's secret-scanning gate covers. Nothing under `infra/keysets/` is ever committed.
+`infra/keysets/` holds **generated, git-ignored material only**. A plaintext Tink keyset is base64 AES-256 key material; committing one would violate the standing prohibition on committing key material and would be permanent in the history ADR-025's secret-scanning gate covers. Nothing under `infra/keysets/` is ever committed.
 
 Provisioning is `maintenance-worker local-bootstrap` — non-interactive and idempotent. It ensures the two aliased KMS master keys exist, generates and writes both wrapped keysets, and seeds the database secrets, deriving every provisioned name from the same configuration classes the services read. Re-running it creates no duplicate key, alias, or secret and leaves existing keyset material untouched; it deliberately **refuses to overwrite a keyset it cannot read** rather than destroying decryptable data.
 
@@ -103,7 +103,7 @@ Provisioning is `maintenance-worker local-bootstrap` — non-interactive and ide
 
 ## 6. Assurance target
 
-The declared target is **OWASP ASVS 5.0.0 Level 2** (ADR-027 §1), amending the previously inherited and unjustified L3 claim.
+The declared target is **OWASP ASVS 5.0.0 Level 2** (ADR-026 §1), amending the previously inherited and unjustified L3 claim.
 
 - **Adopted above L2:** 13.3.4 and 13.1.4 (documented secret expiry and rotation schedule), and the **hardware-backed elevation of 13.3.1** — the KMS master key is HSM-resident and never leaves KMS. The derived Tink data-encryption keys are not HSM-resident.
 - **Deferred with reason:** 13.3.3 (all cryptographic operations inside an isolated security module), on the NFR-001 P95 budget. Revisit by measurement with real users, or on a change in regulatory scope.
@@ -116,10 +116,10 @@ The declared target is **OWASP ASVS 5.0.0 Level 2** (ADR-027 §1), amending the 
 
 Deterministic encryption of `account_number` is preserved, and nothing uses it. `accounts.account_number` is plain `TEXT NOT NULL` with **no index and no unique constraint**, and no code filters, joins, or deduplicates on it. The reconciliation and duplicate-detection use cases that originally justified determinism do not exist.
 
-Two constraints bear on what a searchable capability would eventually need, both recorded in ADR-027 §3:
+Two constraints bear on what a searchable capability would eventually need, both recorded in ADR-026 §3:
 
-- Deterministic encryption permits frequency analysis. The mitigation is unchanged from ADR-018: high-entropy fields only, tenant-scoped associated data. An AWS KMS HMAC blind index (`GenerateMac`/`VerifyMac`, emulated by LocalStack on the free tier) is the recorded upgrade path.
-- The delivered `statement-import-reconciliation-contracts` capability mandates that import provenance carry only a **masked** account reference — `****` plus the last four characters — and forbids persisting an unmasked one. Equality on full-value deterministic ciphertext cannot serve a suffix match. **So if reconciliation is the driver, a keyed blind index over a normalized suffix is the likelier mechanism than deterministic encryption of the whole value.** Deciding whether the deterministic capability is exercised at all is itself an ADR-027 follow-up, due _before building any index on `account_number`_.
+- Deterministic encryption permits frequency analysis. The mitigation is unchanged from ADR-017: high-entropy fields only, tenant-scoped associated data. An AWS KMS HMAC blind index (`GenerateMac`/`VerifyMac`, emulated by LocalStack on the free tier) is the recorded upgrade path.
+- The delivered `statement-import-reconciliation-contracts` capability mandates that import provenance carry only a **masked** account reference — `****` plus the last four characters — and forbids persisting an unmasked one. Equality on full-value deterministic ciphertext cannot serve a suffix match. **So if reconciliation is the driver, a keyed blind index over a normalized suffix is the likelier mechanism than deterministic encryption of the whole value.** Deciding whether the deterministic capability is exercised at all is itself an ADR-026 follow-up, due _before building any index on `account_number`_.
 
 ---
 
@@ -129,4 +129,4 @@ Two constraints bear on what a searchable capability would eventually need, both
 
 The mitigations — multi-Region keys, `ScheduleKeyDeletion`/`DisableKey` alarms, and a recorded restore rehearsal — are staged behind an explicit trigger: _before the first real user data is persisted_. Deletion protection and a long deletion waiting period are free and should be set at provisioning time.
 
-**There is no in-force secret-recovery runbook.** `docs/ops/vault-recovery.md` is retained as a historical tabletop record and carries a not-in-force banner; the KMS-oriented replacement is a named ADR-027 follow-up and is **not yet written**.
+**There is no in-force secret-recovery runbook.** `docs/ops/vault-recovery.md` is retained as a historical tabletop record and carries a not-in-force banner; the KMS-oriented replacement is a named ADR-026 follow-up and is **not yet written**.

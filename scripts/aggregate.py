@@ -68,7 +68,23 @@ SOURCES = [
         ref="main",
         trees=[
             Tree("docs/architecture/decisions", "backend/decisions", "Architecture Decisions"),
-            Tree("docs/contracts", "backend/contracts", "Contracts"),
+            Tree(
+                "docs/contracts",
+                "backend/contracts",
+                "Contracts",
+                link_rewrites=(
+                    # The contract changelogs point at the ADR renumbering table,
+                    # which sits outside the vendored contracts tree here. The
+                    # anchor is rewritten too: the backend slugifies the heading's
+                    # en dash to `--`, this site's toc plugin to `-`.
+                    (
+                        "](../../../architecture/decisions/index.md"
+                        "#renumbering-of-2026-08-21-old--new)",
+                        "](/reference/backend/decisions/index.md"
+                        "#renumbering-of-2026-08-21-old-new)",
+                    ),
+                ),
+            ),
         ],
     ),
     Source(

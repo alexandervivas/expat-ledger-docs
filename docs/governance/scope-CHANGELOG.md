@@ -1,5 +1,14 @@
 # Scope CHANGELOG
 
+> **Decoding ADR identifiers in this log.** Entries are historical records and keep the
+> identifiers they were written with. The backend series was renumbered on 2026-08-21
+> ([backend#228](https://github.com/alexandervivas/expat-ledger-backend/issues/228)) and the
+> devops series on the same day ([devops#34](https://github.com/alexandervivas/expat-ledger-devops/issues/34)).
+> Resolve any identifier below through the old → new mapping tables in the
+> [backend decisions index](https://github.com/alexandervivas/expat-ledger-backend/blob/main/docs/architecture/decisions/index.md)
+> and the [devops decisions index](https://github.com/alexandervivas/expat-ledger-devops/blob/main/docs/decisions/index.md).
+> A number alone never identifies a decision across repositories — the repository is the disambiguator.
+
 ## 2026-08-10 — Delivery Quality: The Documented Startup Command Is Proven, and Its Topology Is Guarded (issue #89)
 
 **Summary**
@@ -39,7 +48,7 @@ No FR/NFR mandates a documented local startup command; issue #89 records this as
 
 **Summary**
 
-- [ADR-027](/reference/backend/decisions/ADR-027-secret-management-proportionality.md) (Accepted 2026-08-06) replaced HashiCorp Vault with Google Tink AEAD/DAEAD behind the existing `SecretManager` port, keysets wrapped by AWS KMS customer managed keys, static per-environment database credentials, and LocalStack for local development. [Issue #88](https://github.com/alexandervivas/expat-ledger-backend/issues/88) executed it. **Vault no longer exists anywhere in the repository** — code, tests, configuration, `infra/vault/`, `docker-compose.security.yml`, the `vault4s` dependency, and every `VAULT_*` variable are gone.
+- [ADR-027](/reference/backend/decisions/ADR-026-secret-management-proportionality.md) (now ADR-026; Accepted 2026-08-06) replaced HashiCorp Vault with Google Tink AEAD/DAEAD behind the existing `SecretManager` port, keysets wrapped by AWS KMS customer managed keys, static per-environment database credentials, and LocalStack for local development. [Issue #88](https://github.com/alexandervivas/expat-ledger-backend/issues/88) executed it. **Vault no longer exists anywhere in the repository** — code, tests, configuration, `infra/vault/`, `docker-compose.security.yml`, the `vault4s` dependency, and every `VAULT_*` variable are gone.
 - **Four capabilities are removed outright, not rewritten**, because their requirements mandated the mechanism ADR-027 deletes:
   - `vault-ale-runtime-cutover` — all requirements removed. It mandated Vault Transit for runtime ALE and **explicitly forbade local Tink keyset providers on the production path**; ADR-027 reverses both.
   - `vault-dynamic-db-credentials` — all requirements removed. Dynamic lease-based credentials are replaced by static per-environment secrets, and `DatabaseCredentials` no longer carries `leaseId`, `leaseDuration`, or `renewable`.
