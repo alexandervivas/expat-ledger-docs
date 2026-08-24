@@ -15,7 +15,7 @@ Use `.claude/skills/develop-github-issue/scripts/project_issue.sh` for project i
 
 Keep the parent agent as delivery lead. The parent owns issue qualification, structural decisions about the site, final quality gates, GitHub synchronization, and the completion report.
 
-Delegation is optional in this repository — most documentation batches are small enough to execute directly. When a batch is large (bulk page moves, sweeping link rewrites), spawn a general-purpose subagent with an explicit `model` matched to the batch: `haiku` for mechanical moves and link rewrites, `sonnet` for routine page work, `opus` only for cross-cutting restructuring. Give every subagent the issue URL, the exact scope, and the validation commands. Never run more than one workspace-writing agent at once.
+Delegation is optional in this repository — most documentation batches are small enough to execute directly. Under an expensive session model, prefer delegating any more-than-trivial batch to a general-purpose subagent with an explicit cheaper `model` (`haiku` for mechanical moves and link rewrites, `sonnet` for routine page work) rather than editing at the session tier. When a batch is large (bulk page moves, sweeping link rewrites), spawn a general-purpose subagent with an explicit `model` matched to the batch: `haiku` for mechanical moves and link rewrites, `sonnet` for routine page work, `opus` only for cross-cutting restructuring. Give every subagent the issue URL, the exact scope, and the validation commands. Never run more than one workspace-writing agent at once.
 
 ## Isolate And Reclaim Parallel Workspaces
 
