@@ -69,6 +69,7 @@ nav:
       - Security: governance/SECURITY.md
       - SLOs & SLIs: governance/SLOs-SLIs.md
       - Evidence Archive Convention: governance/evidence-archive.md
+      - PM Briefing (Claude Desktop): governance/pm-briefing.md
   - Operations:
       - CI Quality Gates: ops/ci-quality-gates.md
       - Deployment (Render, not in force): ops/deployment-render.md
