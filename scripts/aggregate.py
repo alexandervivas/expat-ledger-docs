@@ -67,7 +67,28 @@ SOURCES = [
         repo_url="https://github.com/alexandervivas/expat-ledger-backend.git",
         ref="main",
         trees=[
-            Tree("docs/architecture/decisions", "backend/decisions", "Architecture Decisions"),
+            Tree(
+                "docs/architecture/decisions",
+                "backend/decisions",
+                "Architecture Decisions",
+                link_rewrites=(
+                    # ADR-026's 2026-08-24 amendment links the rotation runbook,
+                    # which lives outside the vendored decisions tree; point at
+                    # the source repository instead.
+                    (
+                        "](../../ops/secret-rotation.md)",
+                        "](https://github.com/alexandervivas/expat-ledger-backend"
+                        "/blob/main/docs/ops/secret-rotation.md)",
+                    ),
+                    # Same em/en-dash slugify mismatch as the contracts rule:
+                    # the amendment's self-anchor slugifies to `--` upstream and
+                    # `-` under this site's toc plugin.
+                    (
+                        "](#amendment--2026-08-24-the-platform-is-gcp)",
+                        "](#amendment-2026-08-24-the-platform-is-gcp)",
+                    ),
+                ),
+            ),
             Tree(
                 "docs/contracts",
                 "backend/contracts",
