@@ -13,7 +13,7 @@ This directory contains the functional and non-functional requirements for the E
 | [FR-005](FR-005-ingestion-engine.md)        | Ingestion Engine                   | Implemented |
 | [FR-006](FR-006-remittance-linkage.md)      | Remittance Linkage                 | Implemented |
 | [FR-007](FR-007-rbac-security.md)           | RBAC & Identity Propagation        | Implemented |
-| [FR-008](FR-008-data-encryption.md)         | Data Encryption (ADR-019)          | Implemented |
+| [FR-008](FR-008-data-encryption.md)         | Data Encryption                    | Implemented |
 | [FR-009](FR-009-idempotency.md)             | Idempotency                        | Implemented |
 | [FR-010](FR-010-bank-attribution.md)        | Bank Attribution                   | Implemented |
 | [FR-011](FR-011-multi-currency-balances.md) | Multi-Currency Balances            | Implemented |
