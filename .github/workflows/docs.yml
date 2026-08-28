@@ -75,3 +75,66 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  notify-on-schedule-failure:
+    # Scheduled runs are unattended: a red one produces no PR check for a
+    # human to see, only a workflow-failure email, which eight consecutive
+    # red runs (2026-08-14 -> 2026-08-21) proved isn't enough — nobody
+    # noticed until a later PR found the break by hand. This job turns a red
+    # scheduled run into a single, reused GitHub issue instead: one alert per
+    # outage (repeat failures get a comment, not a new issue), closed
+    # automatically by the next green scheduled run. `workflow_dispatch` is
+    # included too, deliberately, so the alert path can be seeded and proven
+    # on demand instead of waiting for the next cron tick. PR-triggered runs
+    # already surface red checks on the PR and are excluded.
+    if: always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: File, update, or resolve the scheduled-build alert
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PROJECT_TOKEN: ${{ secrets.DOCS_PROJECT_BOARD_TOKEN }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          DEPLOY_RESULT: ${{ needs.deploy.result }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+
+          REPO="${{ github.repository }}"
+          TITLE="Scheduled Docs build is red on main"
+          LABEL="ci-alert"
+
+          gh label create "$LABEL" --repo "$REPO" --color B60205 \
+            --description "Auto-filed by the Docs workflow when a scheduled build fails" \
+            >/dev/null 2>&1 || true
+
+          existing_alert() {
+            gh issue list --repo "$REPO" --state open --json number,title \
+              --jq ".[] | select(.title == \"$TITLE\") | .number" | head -n1
+          }
+
+          if [ "$BUILD_RESULT" = "failure" ] || [ "$DEPLOY_RESULT" = "failure" ]; then
+            existing="$(existing_alert)"
+            if [ -n "$existing" ]; then
+              gh issue comment "$existing" --repo "$REPO" --body "Still red: $RUN_URL"
+            else
+              body=$(printf 'The scheduled Docs workflow failed on `main`: %s\n\nThis is the once-per-outage alert for scheduled (non-PR) build/deploy failures, filed by the `notify-on-schedule-failure` job in `.github/workflows/docs.yml`. It stays open and gets one comment per repeat failure until a green scheduled run closes it automatically.' "$RUN_URL")
+              gh issue create --repo "$REPO" --title "$TITLE" --label "$LABEL" --body "$body"
+              new="$(existing_alert)"
+              if [ -n "$PROJECT_TOKEN" ]; then
+                GH_TOKEN="$PROJECT_TOKEN" gh project item-add 1 --owner alexandervivas \
+                  --url "https://github.com/$REPO/issues/$new"
+              else
+                echo "::warning::DOCS_PROJECT_BOARD_TOKEN is not set; issue #$new was filed but not added to the Project board" >&2
+              fi
+            fi
+          else
+            existing="$(existing_alert)"
+            if [ -n "$existing" ]; then
+              gh issue comment "$existing" --repo "$REPO" --body "Recovered: $RUN_URL"
+              gh issue close "$existing" --repo "$REPO" --reason completed
+            fi
+          fi

@@ -78,6 +78,16 @@ and on a `repository_dispatch` of type `docs-updated`.
 > [issue #1](https://github.com/alexandervivas/expat-ledger-docs/issues/1); it
 > must be delivered through each application repository's own workflow.
 
+A scheduled run is unattended, so a red one gets no PR check for a human to
+see — only a workflow-failure email, which has already gone unnoticed for
+eight consecutive runs. The `notify-on-schedule-failure` job in
+`.github/workflows/docs.yml` turns a red scheduled (or manually dispatched)
+run into a single reused GitHub issue titled "Scheduled Docs build is red on
+main": the first failure files it and adds it to the Project board, repeat
+failures each get a comment instead of a new issue, and the next green run
+closes it automatically. PR-triggered runs already surface red checks on the
+PR and are excluded.
+
 ## Working in this repository
 
 - Read `AGENTS.md` first. It is the repository-wide instruction set.
