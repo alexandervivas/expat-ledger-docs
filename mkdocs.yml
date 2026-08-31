@@ -66,6 +66,7 @@ nav:
   - Governance:
       - Scope CHANGELOG: governance/scope-CHANGELOG.md
       - Product CHANGELOG: governance/product-CHANGELOG.md
+      - Living Product Document: governance/living-product-document.md
       - Security: governance/SECURITY.md
       - SLOs & SLIs: governance/SLOs-SLIs.md
       - Evidence Archive Convention: governance/evidence-archive.md
