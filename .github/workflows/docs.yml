@@ -124,14 +124,18 @@ jobs:
               body=$(printf 'The scheduled Docs workflow failed on `main`: %s\n\nThis is the once-per-outage alert for scheduled (non-PR) build/deploy failures, filed by the `notify-on-schedule-failure` job in `.github/workflows/docs.yml`. It stays open and gets one comment per repeat failure until a green scheduled run closes it automatically.' "$RUN_URL")
               gh issue create --repo "$REPO" --title "$TITLE" --label "$LABEL" --body "$body"
               new="$(existing_alert)"
-              if [ -n "$PROJECT_TOKEN" ]; then
-                GH_TOKEN="$PROJECT_TOKEN" gh project item-add 1 --owner alexandervivas \
-                  --url "https://github.com/$REPO/issues/$new"
+              if [ -z "$new" ]; then
+                echo "::warning::Could not determine the number of the alert issue just filed; skipping the Project-board add" >&2
+              elif [ -n "$PROJECT_TOKEN" ]; then
+                if ! GH_TOKEN="$PROJECT_TOKEN" gh project item-add 1 --owner alexandervivas \
+                  --url "https://github.com/$REPO/issues/$new"; then
+                  echo "::warning::gh project item-add failed for issue #$new; it was filed but not added to the Project board" >&2
+                fi
               else
                 echo "::warning::DOCS_PROJECT_BOARD_TOKEN is not set; issue #$new was filed but not added to the Project board" >&2
               fi
             fi
-          else
+          elif [ "$BUILD_RESULT" = "success" ] && [ "$DEPLOY_RESULT" = "success" ]; then
             existing="$(existing_alert)"
             if [ -n "$existing" ]; then
               gh issue comment "$existing" --repo "$REPO" --body "Recovered: $RUN_URL"
