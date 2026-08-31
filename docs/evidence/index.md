@@ -15,6 +15,7 @@ an old one, so the before and after stand side by side.
 
 | Run | Date | Feature | Kind | Verdict |
 | --- | --- | --- | --- | --- |
+| [Start your ledger, end to end (final re-walk)](2026-08-31-start-your-ledger-founder-test-final/index.md) | 2026-08-31 | `start-your-ledger` | Founder test | **Yes** — a real ABN AMRO (NL) account created with its actual IBAN, end to end, with no blocker remaining. No findings. Closes expat-ledger-frontend#142. |
 | [Start your ledger, end to end (re-walk)](2026-08-31-start-your-ledger-founder-test-rewalk/index.md) | 2026-08-31 | `start-your-ledger` | Founder test | **Yes, with one new finding** — sign-up/sign-in/tenant-isolation and the ABN AMRO (NL) bank preset (backend#305) all confirmed fixed; a new defect found where the account itself cannot be created with a real IBAN. One finding filed. |
 | [Start your ledger, end to end (re-walk)](2026-08-28-start-your-ledger-founder-test-rewalk/index.md) | 2026-08-28 | `start-your-ledger` | Founder test | **Yes, with one new finding** — all ten prior blockers confirmed fixed; a new defect found where two of three corridor bank presets (ABN AMRO, ING — both Netherlands) cannot be created. One finding filed. |
 | [Start your ledger, end to end](2026-08-20-start-your-ledger-founder-test/index.md) | 2026-08-20 | `start-your-ledger` | Founder test | **No** — a new user can sign up, sign in and gets a correctly isolated tenant, but the first screen after onboarding is an error rather than their own empty position. Eleven findings filed. |
