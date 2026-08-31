@@ -77,7 +77,7 @@ Reviewability is a delivery gate: keep every pull request within roughly 200–3
    - Acceptance criteria and scope are actionable.
    - Required dependencies are satisfied or explicitly included in the change.
 5. Stop without changing project status when the issue needs a product decision, belongs to another repository, or has an unresolved dependency.
-6. Preserve unrelated working-tree changes. Reuse a matching branch rather than creating duplicates.
+6. Preserve unrelated working-tree changes. Reuse a matching branch rather than creating duplicates. When `git status` shows complete-but-unpublished work from a prior session (finished evidence, documentation, or artifacts with nothing left to do), publish or hand it off before starting fresh work — completed work stranded in a checkout is invisible to the board (2026-08-31: three days of finished walk evidence sat uncommitted in this repository's checkout).
 
 ## 2. Start The Delivery Record
 
