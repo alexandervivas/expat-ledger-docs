@@ -12,17 +12,17 @@
 >
 > Versioned in this repository so its history is the audit trail of how
 > hypotheses lived and died.
+>
+> **Structure (owner-defined, fixed).** Active hypotheses each state an
+> explicit kill criterion before any evidence is collected. Resolved
+> hypotheses each state what killed or confirmed them. Decisions are dated,
+> with the reason. The sections below are otherwise empty until the owner
+> writes in them.
 
-## Active Hypotheses
+## Active hypotheses
 
-_Each hypothesis states its kill criterion before any evidence is collected._
-
-## Resolved Hypotheses
-
-_Each entry states what killed or confirmed the hypothesis._
+## Resolved hypotheses
 
 ## Decisions
 
-_Dated, with the reason._
-
-## Open Questions
+## Open questions
