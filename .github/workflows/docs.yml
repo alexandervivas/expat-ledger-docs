@@ -36,8 +36,11 @@ jobs:
       - run: pip install -r requirements.txt
 
       # Pulls contracts and ADRs from the application repositories. Both are
-      # public, so no token is needed.
+      # private, so a fine-grained PAT (Contents: Read-only, scoped to just
+      # those two repositories) authenticates the clone.
       - name: Aggregate code-adjacent documentation
+        env:
+          DOCS_SOURCE_REPOS_TOKEN: ${{ secrets.DOCS_SOURCE_REPOS_TOKEN }}
         run: python scripts/aggregate.py
 
       - name: Build site

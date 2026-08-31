@@ -47,8 +47,12 @@ cause rather than loosening the gate.
 ## How aggregation works
 
 `scripts/aggregate.py` does a shallow, blobless, sparse `git clone` of both
-application repositories — both are public, so no token is involved — and
-copies only the needed subtrees into `docs/reference/`. It then:
+application repositories and copies only the needed subtrees into
+`docs/reference/`. Both repositories are private, so CI authenticates the
+clone with a fine-grained PAT (`DOCS_SOURCE_REPOS_TOKEN`, Contents:
+Read-only, scoped to just those two repositories); local development relies
+instead on the developer's own git credentials already having read access.
+It then:
 
 - generates `docs/reference/SUMMARY.md`, the
   [mkdocs-literate-nav](https://oprypin.github.io/mkdocs-literate-nav/) file

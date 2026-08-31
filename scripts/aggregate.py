@@ -14,6 +14,7 @@ Run it before every build, locally and in CI:
 from __future__ import annotations
 
 import argparse
+import os
 import posixpath
 import re
 import shutil
@@ -22,6 +23,14 @@ import sys
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
+
+# A fine-grained PAT (Contents: Read-only on the application repositories),
+# needed because expat-ledger-backend and expat-ledger-frontend are private
+# and the CI runner has no other credentials for them. Left unset in local
+# development, where the clone instead relies on the developer's own
+# authenticated git (SSH key or credential helper) already having read
+# access as a collaborator.
+SOURCE_REPOS_TOKEN_ENV = "DOCS_SOURCE_REPOS_TOKEN"
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 REFERENCE_DIR = REPO_ROOT / "docs" / "reference"
@@ -115,13 +124,20 @@ def run(command: list[str], cwd: Path | None = None) -> None:
     subprocess.run(command, cwd=cwd, check=True, capture_output=True, text=True)
 
 
+def _authenticated_clone_url(repo_url: str) -> str:
+    token = os.environ.get(SOURCE_REPOS_TOKEN_ENV)
+    if not token:
+        return repo_url
+    return repo_url.replace("https://", f"https://x-access-token:{token}@", 1)
+
+
 def fetch(source: Source, workdir: Path) -> Path:
     """Shallow, blobless, sparse checkout of only the trees we need."""
     checkout = workdir / source.name
     run(
         [
             "git", "clone", "--depth", "1", "--filter=blob:none", "--sparse",
-            "--branch", source.ref, source.repo_url, str(checkout),
+            "--branch", source.ref, _authenticated_clone_url(source.repo_url), str(checkout),
         ]
     )
     run(["git", "sparse-checkout", "set", *(t.source_path for t in source.trees)], cwd=checkout)
@@ -305,5 +321,9 @@ if __name__ == "__main__":
     try:
         sys.exit(main())
     except subprocess.CalledProcessError as error:
-        print(f"command failed: {' '.join(error.cmd)}\n{error.stderr}", file=sys.stderr)
+        message = f"command failed: {' '.join(error.cmd)}\n{error.stderr}"
+        token = os.environ.get(SOURCE_REPOS_TOKEN_ENV)
+        if token:
+            message = message.replace(token, "***")
+        print(message, file=sys.stderr)
         sys.exit(1)
