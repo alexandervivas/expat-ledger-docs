@@ -189,21 +189,22 @@ def _resolve_repo_local_link(target: str, file_source_path: str, source: Source)
     anything this site doesn't aggregate), it becomes a GitHub blob URL. This
     covers any repo-local file link as a class, not one ADR at a time.
     """
-    path, _, _ = target.partition("#")
+    path, sep, fragment = target.partition("#")
     if not path or ".." not in path or path.startswith(("http://", "https://", "/")):
         return None
 
     file_dir = posixpath.dirname(file_source_path)
     resolved = posixpath.normpath(posixpath.join(file_dir, path))
+    anchor = f"{sep}{fragment}"
 
     for tree in source.trees:
         root = tree.source_path
         if resolved == root or resolved.startswith(root + "/"):
             relative = posixpath.relpath(resolved, root)
-            return f"/reference/{tree.dest_path}/{relative}"
+            return f"/reference/{tree.dest_path}/{relative}{anchor}"
 
     repo_url = source.repo_url.removesuffix(".git")
-    return f"{repo_url}/blob/{source.ref}/{resolved}"
+    return f"{repo_url}/blob/{source.ref}/{resolved}{anchor}"
 
 
 def rewrite_links(text: str, file_source_path: str, source: Source) -> str:
