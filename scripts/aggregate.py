@@ -14,6 +14,8 @@ Run it before every build, locally and in CI:
 from __future__ import annotations
 
 import argparse
+import posixpath
+import re
 import shutil
 import subprocess
 import sys
@@ -42,11 +44,13 @@ class Tree:
     source_path: str
     dest_path: str
     title: str
-    # Literal (old, new) link rewrites applied to markdown in this tree.
-    # Links that escape the vendored tree would otherwise dangle; each rule is
-    # written out explicitly so an upstream move fails the strict build loudly
-    # rather than being silently patched by a regex.
-    link_rewrites: tuple[tuple[str, str], ...] = ()
+    # Literal (old, new) link rewrites for content that migrated permanently
+    # into this repository. Unlike a repo-local file link or an anchor-slug
+    # mismatch (see `_resolve_repo_local_link` / `_normalize_anchor` below),
+    # the correct target here isn't derivable from repository structure — it
+    # depends on where the migrated page landed in *this* repo's own nav —
+    # so it stays an explicit, one-off mapping.
+    migrated_link_rewrites: tuple[tuple[str, str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -71,40 +75,11 @@ SOURCES = [
                 "docs/architecture/decisions",
                 "backend/decisions",
                 "Architecture Decisions",
-                link_rewrites=(
-                    # ADR-026's 2026-08-24 amendment links the rotation runbook,
-                    # which lives outside the vendored decisions tree; point at
-                    # the source repository instead.
-                    (
-                        "](../../ops/secret-rotation.md)",
-                        "](https://github.com/alexandervivas/expat-ledger-backend"
-                        "/blob/main/docs/ops/secret-rotation.md)",
-                    ),
-                    # Same em/en-dash slugify mismatch as the contracts rule:
-                    # the amendment's self-anchor slugifies to `--` upstream and
-                    # `-` under this site's toc plugin.
-                    (
-                        "](#amendment--2026-08-24-the-platform-is-gcp)",
-                        "](#amendment-2026-08-24-the-platform-is-gcp)",
-                    ),
-                ),
             ),
             Tree(
                 "docs/contracts",
                 "backend/contracts",
                 "Contracts",
-                link_rewrites=(
-                    # The contract changelogs point at the ADR renumbering table,
-                    # which sits outside the vendored contracts tree here. The
-                    # anchor is rewritten too: the backend slugifies the heading's
-                    # en dash to `--`, this site's toc plugin to `-`.
-                    (
-                        "](../../../architecture/decisions/index.md"
-                        "#renumbering-of-2026-08-21-old--new)",
-                        "](/reference/backend/decisions/index.md"
-                        "#renumbering-of-2026-08-21-old-new)",
-                    ),
-                ),
             ),
         ],
     ),
@@ -118,7 +93,7 @@ SOURCES = [
                 "docs/architecture/decisions",
                 "frontend/decisions",
                 "Architecture Decisions",
-                link_rewrites=(
+                migrated_link_rewrites=(
                     # These narratives migrated into this repository; the ADRs'
                     # sibling-relative links no longer resolve upstream.
                     (
@@ -182,6 +157,65 @@ def wrap_non_markdown(path: Path) -> None:
     )
 
 
+MARKDOWN_LINK_TARGET_RE = re.compile(r"(\]\()([^)\s]+)(\))")
+
+
+def _normalize_anchor(target: str) -> str:
+    """Collapse hyphen runs in a link's anchor fragment.
+
+    A heading containing an em dash or arrow (e.g. "Amendment — 2026-08-24"
+    or "old → new") slugifies to a double hyphen upstream — GitHub's
+    slugifier doesn't collapse repeated hyphens — but to a single hyphen
+    under this site's toc plugin, which does. Every anchor is normalized to
+    the collapsed form, whichever heading produced the mismatch, so a new
+    dash/arrow-bearing heading upstream doesn't need its own rule here.
+    """
+    path, sep, fragment = target.partition("#")
+    if not sep:
+        return target
+    return f"{path}#{re.sub(r'-{2,}', '-', fragment)}"
+
+
+def _resolve_repo_local_link(target: str, file_source_path: str, source: Source) -> str | None:
+    """Rewrite a relative link that escapes the vendored tree it's found in.
+
+    Returns None when the link's target stays inside a tree vendored from
+    this source at the identical relative structure — the copy keeps it
+    resolvable as-is. Otherwise the target is resolved against the file's
+    true location in the source repository: if that location falls inside
+    *another* tree vendored from the same source (e.g. an ADR pointing at
+    the contracts changelog), it becomes a site-local `/reference/...` link;
+    if it falls outside every vendored tree (an ops runbook, a devops file —
+    anything this site doesn't aggregate), it becomes a GitHub blob URL. This
+    covers any repo-local file link as a class, not one ADR at a time.
+    """
+    path, sep, fragment = target.partition("#")
+    if not path or ".." not in path or path.startswith(("http://", "https://", "/")):
+        return None
+
+    file_dir = posixpath.dirname(file_source_path)
+    resolved = posixpath.normpath(posixpath.join(file_dir, path))
+    anchor = f"{sep}{fragment}"
+
+    for tree in source.trees:
+        root = tree.source_path
+        if resolved == root or resolved.startswith(root + "/"):
+            relative = posixpath.relpath(resolved, root)
+            return f"/reference/{tree.dest_path}/{relative}{anchor}"
+
+    repo_url = source.repo_url.removesuffix(".git")
+    return f"{repo_url}/blob/{source.ref}/{resolved}{anchor}"
+
+
+def rewrite_links(text: str, file_source_path: str, source: Source) -> str:
+    def rewrite(match: re.Match[str]) -> str:
+        prefix, target, suffix = match.groups()
+        rewritten = _resolve_repo_local_link(target, file_source_path, source) or target
+        return f"{prefix}{_normalize_anchor(rewritten)}{suffix}"
+
+    return MARKDOWN_LINK_TARGET_RE.sub(rewrite, text)
+
+
 def vendor(source: Source, checkout: Path) -> None:
     for tree in source.trees:
         origin = checkout / tree.source_path
@@ -195,11 +229,12 @@ def vendor(source: Source, checkout: Path) -> None:
             if not path.is_file():
                 continue
             if path.suffix == ".md":
-                if tree.link_rewrites:
-                    text = path.read_text(encoding="utf-8")
-                    for old, new in tree.link_rewrites:
-                        text = text.replace(old, new)
-                    path.write_text(text, encoding="utf-8")
+                file_source_path = posixpath.join(tree.source_path, path.relative_to(destination).as_posix())
+                text = path.read_text(encoding="utf-8")
+                for old, new in tree.migrated_link_rewrites:
+                    text = text.replace(old, new)
+                text = rewrite_links(text, file_source_path, source)
+                path.write_text(text, encoding="utf-8")
             elif path.suffix in CODE_LANGUAGES:
                 wrap_non_markdown(path)
 
