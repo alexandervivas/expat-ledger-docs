@@ -1,6 +1,6 @@
 # Desk research — how people use expat and personal-finance products
 
-| | |
+| Field | Value |
 | --- | --- |
 | **Lane** | UX - Design & Research (standing lane, opened 2026-08-20, gate [backend#229](https://github.com/alexandervivas/expat-ledger-backend/issues/229) closed) |
 | **Source issue** | [expat-ledger-docs#7](https://github.com/alexandervivas/expat-ledger-docs/issues/7) |
