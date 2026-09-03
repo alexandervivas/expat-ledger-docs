@@ -78,6 +78,7 @@ nav:
       - OpenCode OpenSpec Workflow (Scala): ops/opencode-openspec-agentic-workflow.md
   - UX:
       - Stitch Prompt: ux/stitch-prompt.md
+      - "Desk Research: Pain Points & Opportunities": ux/desk-research-pain-points-opportunities.md
   # Walked-run screenshots. Public and stable so they render in issues in the
   # private application repositories. See governance/evidence-archive.md.
   - Evidence:
