@@ -58,9 +58,10 @@ both rates are computed exactly from the transfer's own observed values.
 | 12 | 500.00 | 495.20 | 4.80 | 2,165,010 | Bank deposit | Same day | Remitly | 4,371.99 | 4,330.02 |
 
 This is the shape a trend read against a kill criterion runs on: twelve rows,
-two derived rates each, read across the run for drift rather than compared
-transfer-by-transfer. The real test (docs#46) reports its verdict — hook
-confirmed or hook weaker than assumed — as a comment, never as figures.
+each with its derived fee and its two derived rates, read across the run for
+drift rather than compared transfer-by-transfer. The real test (docs#46)
+reports its verdict — hook confirmed or hook weaker than assumed — as a
+comment, never as figures.
 
 ## Recruitment-call use
 
