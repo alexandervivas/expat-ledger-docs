@@ -80,6 +80,7 @@ nav:
       - Stitch Prompt: ux/stitch-prompt.md
       - "Desk Research: Pain Points & Opportunities": ux/desk-research-pain-points-opportunities.md
       - "Corridor Rate Sheet: Structure & Synthetic Example": ux/corridor-rate-sheet-template.md
+      - "Free Product First Flow: Paper Draft": ux/free-product-first-flow-draft.md
   # Walked-run screenshots. Public and stable so they render in issues in the
   # private application repositories. See governance/evidence-archive.md.
   - Evidence:
