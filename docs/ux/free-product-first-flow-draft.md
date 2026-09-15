@@ -22,10 +22,16 @@ no statement import, no accounts. It qualifies a user on one question:
 > **how much can I commit this month?**
 
 The family-remittance obligation is first-class input, not folded into
-generic debts — it is the pain point this product exists to answer
-correctly (see `docs/requirements/FR-006-remittance-linkage.md` and the
-double-counting failure mode named in
-[Desk Research: Pain Points & Opportunities](desk-research-pain-points-opportunities.md#pain-points-ranked-strongest-signal-first)).
+generic debts, per the 2026-08-28 walk decision promoting it to a
+first-class citizen of the data model (`docs/governance/pm-briefing.md`).
+This is distinct from `docs/requirements/FR-006-remittance-linkage.md`,
+which links a *paid-ledger* withdrawal to its matching cross-currency
+deposit to prevent double-counting an existing account-to-account
+transfer — a different mechanism, in the paid product, for a different
+problem than this account-less free flow. The double-counting failure
+mode named in
+[Desk Research: Pain Points & Opportunities](desk-research-pain-points-opportunities.md#pain-points-ranked-strongest-signal-first)
+motivates why this product cares about the distinction at all.
 
 ## Draft question sequence
 
@@ -35,31 +41,51 @@ the next; nothing is asked twice.
 1. **Income this month.** "How much money will you have coming in this
    month, and in what currency?" — a single hand-written number per income
    source (salary, freelance, other), each tagged with its currency.
-2. **Fixed debts and obligations.** "What do you already owe or have to pay
-   this month, before anything else?" — rent, loan installments,
-   subscriptions, anything recurring and non-negotiable.
+2. **Fixed debts and obligations, excluding family remittance.** "What do
+   you already owe or have to pay this month, before anything else?" —
+   rent, loan installments, subscriptions, anything recurring and
+   non-negotiable, **except whatever you're about to enter on card 3** —
+   family remittance is counted once, on its own card, never here. Without
+   this exclusion a participant can enter the same commitment on both
+   cards and the answer subtracts it twice, undermining the exact
+   double-counting problem this product exists to solve.
 3. **Family remittance obligation (first-class).** "How much do you send or
-   commit to family each month, and to whom?" — asked as its own card,
-   never merged into card 2, because it is a distinct commitment with its
-   own currency and its own emotional weight (per the founder's own
-   arrival experience — see issue #29).
+   commit to family each month, and what kind of obligation is it?" —
+   asked as its own card, never merged into card 2, because it is a
+   distinct commitment with its own currency. Record only a synthetic
+   category (e.g. "regular support," "one-off help," "a specific debt") —
+   never a real recipient's name, relationship, or country; the walk
+   collects process descriptions, not identifying details about a
+   participant's family.
 4. **Safety margin (open question — see below).** Whether the flow asks for
    a desired buffer explicitly, or applies a fixed default, is undecided;
-   flag it during the walk rather than deciding it here.
+   the walk is how this gets decided, not a detail to settle beforehand
+   (see walking instructions below).
 
 ## Draft answer
 
-A single number, shown with its breakdown, never as a bare figure:
+A single number, shown with its breakdown, never as a bare figure. Per the
+2026-09-03 product decision (backend#320, Option A) and the no-mixed-
+currency-totals rule (2026-08-26 decision; per-currency representation,
+2026-09-03 decision 7), the committable amount is answered **in the
+income currency**: any debt or family obligation held in a different
+currency is converted at the participant's own recent effective rate and
+labelled an estimate — amounts are never summed across currencies before
+conversion.
+
+If the result would be zero or negative, the answer is not a negative
+number — it is **"$0 committable, and a shortfall of Y"**, so the flow
+never tells a participant they can commit money they don't have.
 
 ```
-You can commit: [income] − [debts] − [family obligation] − [buffer] = X
-
-Income:            [amount] [currency]
-Debts:             [amount] [currency]
-Family obligation: [amount] [currency]
+Income:            [amount] [income currency]
+Debts:             [amount] [income currency] (estimate, if converted)
+Family obligation: [amount] [income currency] (estimate, if converted)
 Buffer:            [amount or "none applied"]
-─────────────────────────────────────────
-Committable:       X [currency]
+─────────────────────────────────────────────
+Committable:       X [income currency]
+  — or, if X ≤ 0 —
+$0 committable. Shortfall: Y [income currency]
 ```
 
 Showing the breakdown, not just X, is deliberate: the desk research found
@@ -70,32 +96,35 @@ number, not just distrust a total.
 ## Open questions to resolve before walking
 
 These mirror the open questions still unanswered on issue #39, since both
-issues describe the same qualifying flow from different lanes:
+issues describe the same qualifying flow from different lanes. (Currency
+combination is not on this list — it's decided; see Draft answer above.)
 
 1. Whether the safety-margin card is asked explicitly or defaulted, and if
    defaulted, what the default is and how it is disclosed.
-2. How multi-currency income/debts/obligation are combined into one
-   committable figure — a single base currency chosen up front, or kept
-   separate and shown per currency.
-3. Whether irregular or variable income (freelance, tips) is asked as a
+2. Whether irregular or variable income (freelance, tips) is asked as a
    single figure or as a range.
-4. The precise wording of "family obligation" in the language the
+3. The precise wording of "family obligation" in the language the
    participant will actually be interviewed in (the recruitment post,
    issue #38, is written in Spanish for the target population).
 
 ## Walking it with 2–3 people
 
-1. Print or hand-write the four cards above; nothing digital.
+1. Print or hand-write cards 1–3; nothing digital. For card 4, print
+   **both variants** — one asking for a desired buffer, one applying a
+   stated fixed default — and use one per participant, recording which.
+   Resolving that open question is what this walk is for.
 2. Ask the participant to fill each card as if it were their own month,
-   using invented numbers — never their real income, debts, or transfers.
+   using invented numbers and, on card 3, an invented category — never
+   real income, debts, transfers, or a real family member's name,
+   relationship, or country.
 3. Do not explain a card before they attempt it; the friction of a
    misread or skipped card is the finding.
-4. After all four cards, show the derived answer and ask: "does this match
-   what you'd expect to be told?" — record disagreement, not just
-   agreement.
-5. Capture, per participant: where they hesitated, what they asked to
-   clarify, and any card they wanted to answer differently than asked
-   (e.g., wanting to give a range instead of one number).
+4. After all cards, show the derived answer and ask: "does this match what
+   you'd expect to be told?" — record disagreement, not just agreement.
+5. Capture, per participant: which card-4 variant they saw, where they
+   hesitated, what they asked to clarify, and any card they wanted to
+   answer differently than asked (e.g., wanting to give a range instead of
+   one number).
 
 ## Out of scope
 
