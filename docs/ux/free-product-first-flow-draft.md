@@ -153,10 +153,32 @@ card felt confusing, or "none") before the third response arrived.
 - Family remittance stayed separated from card 2's debts in every
   response — no observed recurrence of the double-counting this design
   exists to prevent.
-- The one response that hit the zero/shortfall branch ("$0 committable,
-  shortfall of Y") produced a genuine, informative reaction ("no estaba
-  preparado jaja" — wasn't prepared for that) rather than confusion or
-  distress, which is the evidence this branch's wording was built for.
+
+**Confirmed friction — a wording problem, not just a data-quality one:**
+
+- **Card 2 can be misread as "total owed" instead of "due this
+  month."** One response entered a debt of 1,800,000 COP against
+  income of 200,000 COP — a 9:1 ratio that isn't a plausible monthly
+  payment (no lender extends a monthly installment nine times the
+  borrower's monthly income) but is exactly what a total outstanding
+  balance looks like. Card 2 leads with "¿Qué debes...?" (what do you
+  *owe*) before "...este mes" (this month), and the likely reading is
+  that "debes" pulled a total-balance answer even though the sentence
+  qualifies it as monthly. Follow-up: reword card 2 to foreground the
+  monthly-payment framing over the total-owed framing before the next
+  validation pass (e.g. contrasting "la cuota de este mes" against "el
+  saldo total" explicitly), and treat this as the wording finding, not
+  the milder vague-category-label observation below.
+- **The zero/shortfall branch's reaction is real but ambiguous, not
+  confirmed-successful.** The one response that hit "$0 committable,
+  shortfall of Y" produced a genuine reaction ("no estaba preparado
+  jaja") rather than silence — but "wasn't prepared for that" is
+  consistent with either comfortable surprise at an unexpected number
+  or actual discomfort at a blunt shortfall framing, and text alone
+  doesn't distinguish them. This is evidence the branch produces *a*
+  reaction, not evidence the current wording is *right*; whether the
+  shortfall message needs softer framing or more actionable context is
+  an open follow-up for the next pass, not a settled win.
 
 **What stayed open, by owner decision rather than further testing:**
 
@@ -165,12 +187,13 @@ card felt confusing, or "none") before the third response arrived.
   data. The fixed-default variant is kept as the working choice; the
   explicit-ask variant is deferred to a future validation pass rather
   than blocking this round.
-- **Vague category labels persist** (e.g. a debt entered as "Cosas" /
-  "Deuda") regardless of whether the field was free text or a select
-  with a "something else" escape hatch. Given participants were
-  instructed to invent figures, this reads as a low-priority artifact
-  of synthetic testing rather than a defect in the flow itself, and
-  wasn't pursued further.
+- **Vague category labels persist** (e.g. a debt entered as "Cosas")
+  regardless of whether the field was free text or a select with a
+  "something else" escape hatch. Given participants were instructed to
+  invent figures, this reads as a low-priority artifact of synthetic
+  testing rather than a defect in the flow itself, and wasn't pursued
+  further — distinct from the total-owed misreading above, which is a
+  wording defect regardless of synthetic data.
 
 **Decision (owner, 2026-09-17):** this validation round is closed on
 the evidence above — 3 participants is within the criterion's 2–3
