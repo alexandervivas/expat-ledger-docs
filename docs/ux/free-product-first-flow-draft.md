@@ -5,7 +5,7 @@
 | **Lane** | UX - Design & Research |
 | **Source issue** | [expat-ledger-docs#28](https://github.com/alexandervivas/expat-ledger-docs/issues/28) |
 | **Method** | Interface first, services after (walk decision 2026-08-28): the flow is defined on paper before any design tool or code. |
-| **Status** | **Unvalidated draft.** This page is a starting point for the owner to revise on paper and then walk with 2–3 people — it is not the validated flow, and it does not by itself satisfy issue #28's acceptance criteria. |
+| **Status** | **Provisionally validated (2026-09-17).** Walked with 3 people, synthetic data, via a self-serve digital instrument rather than literal paper — see [Validation findings](#validation-findings-2026-09-16-17) below for what changed, what held, and what the owner explicitly left open. |
 | **Feeds** | The owner's paper walk (issue #28); the real-spreadsheet design (issue #39, open questions still unanswered there); user-zero validation (issue #29) |
 
 > **Synthetic data only.** Any example numbers below are invented for
@@ -99,8 +99,12 @@ These mirror the open questions still unanswered on issue #39, since both
 issues describe the same qualifying flow from different lanes. (Currency
 combination is not on this list — it's decided; see Draft answer above.)
 
-1. Whether the safety-margin card is asked explicitly or defaulted, and if
-   defaulted, what the default is and how it is disclosed.
+1. ~~Whether the safety-margin card is asked explicitly or defaulted, and if
+   defaulted, what the default is and how it is disclosed.~~ **Resolved
+   for now (2026-09-17):** all 3 walk participants landed on the
+   fixed-default variant (10%, disclosed before the buffer is applied);
+   the explicit-ask variant went untested by chance, not by decision — see
+   [Validation findings](#validation-findings-2026-09-16-17).
 2. Whether irregular or variable income (freelance, tips) is asked as a
    single figure or as a range.
 3. The precise wording of "family obligation" in the language the
@@ -125,6 +129,58 @@ combination is not on this list — it's decided; see Draft answer above.)
    hesitated, what they asked to clarify, and any card they wanted to
    answer differently than asked (e.g., wanting to give a range instead of
    one number).
+
+## Validation findings (2026-09-16 / 17)
+
+**Method actually used, and why it differs from the plan above.** The
+walk ran as a self-serve digital instrument (a link the owner sent
+directly to participants) rather than literal paper, because the goal
+shifted to remote, unmoderated testing. This is a deliberate, disclosed
+divergence from the "nothing digital" instruction above and from the
+2026-08-28 method decision — logistics, not a reversal of "no design
+tool": the instrument stayed deliberately plain (no branding, no
+product-style polish) rather than becoming a Claude Design or
+high-fidelity artifact. The instrument itself went through one
+mid-walk revision: the first 2 of 3 responses used a version with
+optional free-text reaction fields, and both skipped them entirely,
+giving zero friction signal. The instrument was revised to tap-based,
+required reactions (a Sí/No plus a reason, and a checklist naming which
+card felt confusing, or "none") before the third response arrived.
+
+**What held up, across all 3 participants:**
+
+- The committable-amount arithmetic was correct in every response.
+- Family remittance stayed separated from card 2's debts in every
+  response — no observed recurrence of the double-counting this design
+  exists to prevent.
+- The one response that hit the zero/shortfall branch ("$0 committable,
+  shortfall of Y") produced a genuine, informative reaction ("no estaba
+  preparado jaja" — wasn't prepared for that) rather than confusion or
+  distress, which is the evidence this branch's wording was built for.
+
+**What stayed open, by owner decision rather than further testing:**
+
+- **Card 4 variant coverage.** All 3 participants landed on the
+  fixed-default variant by chance; the explicit-ask variant has zero
+  data. The fixed-default variant is kept as the working choice; the
+  explicit-ask variant is deferred to a future validation pass rather
+  than blocking this round.
+- **Vague category labels persist** (e.g. a debt entered as "Cosas" /
+  "Deuda") regardless of whether the field was free text or a select
+  with a "something else" escape hatch. Given participants were
+  instructed to invent figures, this reads as a low-priority artifact
+  of synthetic testing rather than a defect in the flow itself, and
+  wasn't pursued further.
+
+**Decision (owner, 2026-09-17):** this validation round is closed on
+the evidence above — 3 participants is within the criterion's 2–3
+target, the flow's mechanics held, and at least one genuine reaction
+was captured. Closing on partial variant coverage is an explicit
+choice, not an oversight: user validation now becomes a periodic,
+recurring practice rather than a one-time gate before shipping,
+coordinated with product planning based on product state going
+forward — the deferred variant-A test is expected to be picked up in
+that cadence rather than reopening this specific round.
 
 ## Out of scope
 
