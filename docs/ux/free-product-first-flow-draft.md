@@ -42,11 +42,12 @@ the next; nothing is asked twice.
    month, and in what currency?" — a single hand-written number per income
    source (salary, freelance, other), each tagged with its currency.
 2. **Fixed debts and obligations, excluding family remittance.** "How much
-   do you have to *pay* this month toward your debts — the installment or
-   minimum payment, not the total balance you owe — before anything
-   else?" — rent, loan installments, subscriptions, anything recurring
-   and non-negotiable, **except whatever you're about to enter on card
-   3** — family remittance is counted once, on its own card, never here.
+   do you have to *pay* this month on your debts and other fixed
+   obligations — the installment or minimum payment on any debt, not the
+   total balance you owe — before anything else?" — rent, loan
+   installments, subscriptions, anything recurring and non-negotiable,
+   **except whatever you're about to enter on card 3** — family
+   remittance is counted once, on its own card, never here.
    Without this exclusion a participant can enter the same commitment on
    both cards and the answer subtracts it twice, undermining the exact
    double-counting problem this product exists to solve. **Reworded
