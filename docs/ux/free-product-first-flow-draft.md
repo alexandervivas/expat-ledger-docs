@@ -41,14 +41,21 @@ the next; nothing is asked twice.
 1. **Income this month.** "How much money will you have coming in this
    month, and in what currency?" — a single hand-written number per income
    source (salary, freelance, other), each tagged with its currency.
-2. **Fixed debts and obligations, excluding family remittance.** "What do
-   you already owe or have to pay this month, before anything else?" —
-   rent, loan installments, subscriptions, anything recurring and
-   non-negotiable, **except whatever you're about to enter on card 3** —
-   family remittance is counted once, on its own card, never here. Without
-   this exclusion a participant can enter the same commitment on both
-   cards and the answer subtracts it twice, undermining the exact
-   double-counting problem this product exists to solve.
+2. **Fixed debts and obligations, excluding family remittance.** "How much
+   do you have to *pay* this month on your debts and other fixed
+   obligations — the installment or minimum payment on any debt, not the
+   total balance you owe — before anything else?" — rent, loan
+   installments, subscriptions, anything recurring and non-negotiable,
+   **except whatever you're about to enter on card 3** — family
+   remittance is counted once, on its own card, never here.
+   Without this exclusion a participant can enter the same commitment on
+   both cards and the answer subtracts it twice, undermining the exact
+   double-counting problem this product exists to solve. **Reworded
+   2026-09-17** (see [Validation findings](#validation-findings-2026-09-16-17)):
+   the original phrasing led with "what do you *owe*," which one
+   participant read as the total balance rather than this month's
+   payment — untested against real people yet; tracked on
+   [issue #59](https://github.com/alexandervivas/expat-ledger-docs/issues/59).
 3. **Family remittance obligation (first-class).** "How much do you send or
    commit to family each month, and what kind of obligation is it?" —
    asked as its own card, never merged into card 2, because it is a
@@ -164,11 +171,13 @@ card felt confusing, or "none") before the third response arrived.
   balance looks like. Card 2 leads with "¿Qué debes...?" (what do you
   *owe*) before "...este mes" (this month), and the likely reading is
   that "debes" pulled a total-balance answer even though the sentence
-  qualifies it as monthly. Follow-up: reword card 2 to foreground the
-  monthly-payment framing over the total-owed framing before the next
-  validation pass (e.g. contrasting "la cuota de este mes" against "el
-  saldo total" explicitly), and treat this as the wording finding, not
-  the milder vague-category-label observation below.
+  qualifies it as monthly. **Fixed 2026-09-17** in card 2's prompt above
+  (now contrasts the monthly payment against the total balance
+  explicitly) — the wording change itself is untested against real
+  people, so [issue #59](https://github.com/alexandervivas/expat-ledger-docs/issues/59)
+  tracks confirming it during the next validation pass rather than
+  closing this as resolved on an edit alone. Distinct from the milder
+  vague-category-label observation below.
 - **The zero/shortfall branch's reaction is real but ambiguous, not
   confirmed-successful.** The one response that hit "$0 committable,
   shortfall of Y" produced a genuine reaction ("no estaba preparado
